@@ -10,7 +10,7 @@ class SourceToRaw(config):
             database = config.db,
             user = config.user,
             password = config.password)
-        self.pg = self.conn.cursotr()
+        self.pg = self.conn.cursor()
 
     def csv_to_raw(csv_path:str):
         try:
@@ -45,3 +45,6 @@ class SourceToRaw(config):
                 print("Directory path is not valid !")
         except:
             print("Load directory path to raw db failed ! ")
+
+    def finish():
+        self.conn.close()
