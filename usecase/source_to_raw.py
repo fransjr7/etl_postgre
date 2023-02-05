@@ -6,21 +6,22 @@ from repo.postgre_repo import PostgreRepo
 class SourceToRaw():
     def __init__(self, config):
         # Init postgre connection
-        pg_client = PostgreRepo(config)
-        self.conn = pg_client.conn
-        self.pg = pg_client.pg
-        self.engine= pg_client.engine
+        self.pg_client = PostgreRepo(config)
 
     def csv_to_raw(self, csv_path:str):
         try:
             # Read csv
-            print(csv_path)
             temp_df = pd.read_csv(csv_path)
             temp_df = temp_df.apply(lambda x: x.fillna(0) if x.dtype.kind in 'biufc' else x.fillna('.'))
-            print(temp_df.head(5))
             # Ingest to postgre
-            print("public."+csv_path.split("\\")[-1].split(".")[0])
-            temp_df.to_sql(csv_path.split("\\")[-1].split(".")[0], con=self.engine, if_exists='replace',index =False)
+            print("processing: public."+csv_path.split("\\")[-1].split(".")[0])
+            job_cfg={
+                "table_name": csv_path.split("\\")[-1].split(".")[0],
+                "target_dataset": "raw",
+                "write_disposition": "replace"
+            }
+            self.pg_client.insert_to_db(temp_df,job_cfg)
+
         except Exception as error:
             raise error
             print(f"CSV ingestion to Raw failed for path {csv_path}")
@@ -53,4 +54,4 @@ class SourceToRaw():
             print("Load directory path to raw db failed ! ")
 
     def finish(self):
-        self.conn.close()
+        self.pg_client.close()
