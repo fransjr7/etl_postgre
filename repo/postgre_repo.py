@@ -39,6 +39,14 @@ class PostgreRepo():
         except Exception as error:
             print(f"error in executing query : {error}")
 
+    def exec_query(self, db:str, query:str):
+        try:
+            self.change_db(db)
+            self.pg.execute(query)
+            self.conn.commit()
+        except Exception as error:
+            print(f"error in executing query : {error}")
+
     def insert_to_db(self, data, job_cfg):
         try:
             self.change_db(job_cfg["target_dataset"])

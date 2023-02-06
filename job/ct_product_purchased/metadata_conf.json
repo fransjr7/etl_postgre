@@ -1,7 +1,7 @@
 {
     "source_dataset": "raw",
     "target_dataset": "dwh",
-    "table_name": "orders",
+    "table_name": "ct_product_purchased",
     "write_disposition": "replace",
-    "primary_key": ["order_id"]
+    "primary_key": ["purchased_date","product_id"]
 }

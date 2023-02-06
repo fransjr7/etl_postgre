@@ -1,13 +1,29 @@
 import pandas as pd 
 import psycopg2
 import os 
+from jinja2 import Template
 from repo.postgre_repo import PostgreRepo
 from lib.lib import read_file_json, read_file_string, scan_dir
+from lib.query import index_create
 
 class ProcessTable():
     def __init__(self,config):
         # Init postgre connection
         self.pg_client = PostgreRepo(config)
+
+    def create_index(self, job_cfg):
+        try:
+            param ={
+                "table_name": job_cfg["table_name"],
+                "index_name": job_cfg["table_name"] + "_index",
+                "column_list": ",".join(job_cfg["primary_key"])
+            }
+            template = Template(index_create)
+            query = template.render(param = param)
+            self.pg_client.exec_query(job_cfg["target_dataset"],query)
+            print(f'Succesfullly create index {job_cfg["table_name"] + "_index"}')
+        except Exception as error:
+            print(f"Error in creating index : {error}")
 
     def process_job_repo(self, path: str):
         try:
@@ -26,6 +42,10 @@ class ProcessTable():
 
             # Ingest data to target dataset
             self.pg_client.insert_to_db(result, job_cfg)
+
+            # Create indexing of new table 
+            if "primary_key" in job_cfg:
+                self.create_index(job_cfg)
             print(f"Successfully processing file {path}")
         except Exception as error:
             print(f"Failed to process job in repository {path}")
