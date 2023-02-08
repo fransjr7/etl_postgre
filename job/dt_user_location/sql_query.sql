@@ -23,10 +23,13 @@ select
 	a.zip_code_prefix,
 	a.city,
 	a.state,
-	b.geolocation_lat as lat,
-	b.geolocation_lng as lng
+	min(b.geolocation_lat) as min_lat,
+	max(b.geolocation_lat) as max_lat,
+	min(b.geolocation_lng) as min_lng,
+	max(b.geolocation_lng) as max_lng
 from user_seller a
 left join geolocation_dataset b
 	on a.zip_code_prefix = b.geolocation_zip_code_prefix
 	and a.city = b.geolocation_city
 	and a.state = b.geolocation_state
+group by 1,2,3,4,5,6

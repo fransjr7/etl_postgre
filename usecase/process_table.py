@@ -29,6 +29,7 @@ class ProcessTable():
         try:
             # Read all file in directory
             files = os.listdir(path)
+            print(f"Start processing file {path}")
             # Data pre-processing
             if "metadata_conf.json" not in files or "sql_query.sql" not in files:
                 raise Exception("Error repository not contain required file")
