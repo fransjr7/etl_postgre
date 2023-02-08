@@ -1,13 +1,13 @@
 with 
 purchased_order as (
 	select 
-		to_date(b.order_purchase_timestamp,'YYYY-MM-DD') as purchased_date,
-		a.product_id, 
+		to_date(a.order_purchase_timestamp,'YYYY-MM-DD') as purchased_date,
+		b.product_id, 
 		a.order_id, 
-		a.price, 
-		a.freight_value
-	from order_items_dataset a
-	left join orders_dataset b 
+		b.price, 
+		b.freight_value
+	from orders_dataset a
+	left join order_items_dataset b 
 		using(order_id)
 )
 
