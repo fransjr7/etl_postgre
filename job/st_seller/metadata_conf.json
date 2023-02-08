@@ -1,0 +1,8 @@
+{
+    "source_dataset": "raw",
+    "target_dataset": "dwh",
+    "table_name": "st_seller",
+    "write_disposition": "append", 
+    "//write_disposition options":  "replace, append",
+    "primary_key": ["date_key","seller_id"]
+}

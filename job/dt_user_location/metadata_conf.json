@@ -1,0 +1,8 @@
+{
+    "source_dataset": "raw",
+    "target_dataset": "dwh",
+    "table_name": "dt_user_location",
+    "write_disposition": "replace", 
+    "//write_disposition options":  "replace, append",
+    "primary_key": ["user_id"]
+}

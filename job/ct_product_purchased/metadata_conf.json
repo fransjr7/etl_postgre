@@ -1,0 +1,8 @@
+{
+    "source_dataset": "raw",
+    "target_dataset": "dwh",
+    "table_name": "ct_product_purchased",
+    "write_disposition": "replace", 
+    "//write_disposition options":  "replace, append",
+    "primary_key": ["purchased_date","product_id"]
+}
