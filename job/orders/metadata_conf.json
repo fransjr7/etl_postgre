@@ -1,7 +1,0 @@
-{
-    "source_dataset": "raw",
-    "target_dataset": "dwh",
-    "table_name": "orders",
-    "write_disposition": "replace",
-    "primary_key": ["order_id"]
-}

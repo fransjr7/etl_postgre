@@ -14,8 +14,8 @@ customer_seller_stats as(
 		count(distinct a.order_id) as count_order,
 		sum(b.price) as total_spent,
 		count(distinct b.product_id) as count_product
-	from orders_dataset
-	left join orders
+	from orders a
+	left join order_items b
 		using(order_id)
 	group by 1,2
 ),
@@ -28,10 +28,10 @@ customer_product_stats as(
 		count(distinct b.seller_id) as count_seller,
 		count(distinct c.product_category_name) as count_category,
 		array_agg(distinct c.product_category_name) as category_ordered
-	from orders
-	left join order_items
+	from orders a
+	left join order_items b
 		using(order_id)
-	left join products_dataset
+	left join products_dataset c
 		using(product_id)
 	group by 1,2
 ),
@@ -41,7 +41,7 @@ top_seller as (
 		seller_id,
 		count_product,
 		row_number() over(partition by customer_id, seller_id order by count_order desc) as order_rn,
-		row_number() over(partition by customer_id, seller_id order by total_spen desc) as spent_rn
+		row_number() over(partition by customer_id, seller_id order by total_spent desc) as spent_rn
 	from customer_seller_stats
 ),
 most_order_seller as (
@@ -68,7 +68,7 @@ top_product as (
 		count_category,
 		category_ordered,
 		row_number() over(partition by customer_id, product_id order by count_order desc) as order_rn,
-		row_number() over(partition by customer_id, product_id order by total_spen desc) as spent_rn
+		row_number() over(partition by customer_id, product_id order by total_spent desc) as spent_rn
 	from customer_product_stats
 ),
 most_order_product as (
